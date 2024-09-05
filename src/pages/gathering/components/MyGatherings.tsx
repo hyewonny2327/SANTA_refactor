@@ -2,28 +2,25 @@ import styles from '../../../styles/gathering/gatheringMain.module.scss';
 import SectionTitle from '/src/components/SectionTitle';
 import { getMyGatherings } from '/src/services/gatheringApi';
 import Thumbnail from '/src/components/Thumbnail';
-import { useEffect, useState } from 'react';
-import { GatheringListByCategory } from '/src/types/gatheringTypes';
+import { useQuery } from '@tanstack/react-query';
 
 export function MyGatherings() {
-  const [_thumbnails, setThumbnails] = useState<GatheringListByCategory[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      const res = await getMyGatherings(0, 3);
-      setThumbnails(res.data.content);
-    }
+  const {
+    data: myGatherings,
+    isFetched,
+    isError,
+  } = useQuery({
+    queryKey: ['myGatherings'],
+    queryFn: async () => {
+      const response = await getMyGatherings(0, 3);
+      return response.data.content.slice(0, 3).map((gathering) => ({
+        id: gathering.meetingId,
+        name: gathering.meetingName,
+        image: gathering.image,
+      }));
+    },
+  });
 
-    fetchData();
-  }, []);
-
-  const thumbnails =
-    _thumbnails && _thumbnails.length > 0
-      ? Array.from({ length: 3 }, (_, index) => ({
-          id: _thumbnails[index]?.meetingId,
-          name: _thumbnails[index]?.meetingName,
-          image: _thumbnails[index]?.image,
-        }))
-      : [];
   return (
     <div className={styles.container}>
       <div className={styles.width100}>
@@ -33,8 +30,10 @@ export function MyGatherings() {
           targetPageUrl="/gathering/participate"
         />
       </div>
-      {thumbnails.length !== 0 && <Thumbnail data={thumbnails} isHotTopic={false} isIndexChip={false} />}
-      {thumbnails.length === 0 && (
+      {isFetched && !isError && myGatherings && myGatherings.length > 0 && (
+        <Thumbnail data={myGatherings} isHotTopic={false} isIndexChip={false} />
+      )}
+      {isFetched && !isError && myGatherings && myGatherings.length === 0 && (
         <div className={styles.noGatheringText}>
           참여중인 모임이 없습니다.
           <br />

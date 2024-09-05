@@ -65,9 +65,9 @@ function GatheringMainPage() {
   return (
     <div className={styles.gatheringContainer}>
       {/* <button onClick={showAlert}>클릭</button> */}
-      <Alert variant="error" setIsOpen={setIsOpen} isOpen={isOpen}>
+      {/* <Alert variant="error" setIsOpen={setIsOpen} isOpen={isOpen}>
         오류메세지
-      </Alert>
+      </Alert> */}
       <div className={styles.container}>
         <div className={styles.profileContainer}>
           <UserProfile_small name={currentUserInfo?.nickname} imageUrl={currentUserInfo?.image} />

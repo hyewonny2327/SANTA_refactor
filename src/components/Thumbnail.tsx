@@ -11,6 +11,12 @@ interface ThumbnailProps {
   isIndexChip: boolean;
   isChallenge?: true;
 }
+
+export interface thumbnailsType {
+  id: number;
+  name: string;
+  image: string;
+}
 export default function Thumbnail({ data, isHotTopic, isIndexChip, isChallenge }: ThumbnailProps) {
   const navigate = useNavigate();
   function handleThumbnailClick(id: number, isChallenge?: boolean) {
